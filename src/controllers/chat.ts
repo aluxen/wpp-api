@@ -10,7 +10,7 @@ export const list: RequestHandler = async (req, res) => {
 		const { cursor = undefined, limit = 25 } = req.query;
 		const chats = (
 			await prisma.chat.findMany({
-				cursor: cursor ? { pkId: Number(cursor) } : undefined,
+				cursor: cursor ? { pkId: String(cursor) } : undefined,
 				take: Number(limit),
 				skip: cursor ? 1 : 0,
 				where: { sessionId },
@@ -37,7 +37,7 @@ export const find: RequestHandler = async (req, res) => {
 		const { cursor = undefined, limit = 25 } = req.query;
 		const messages = (
 			await prisma.message.findMany({
-				cursor: cursor ? { pkId: Number(cursor) } : undefined,
+				cursor: cursor ? { pkId: String(cursor) } : undefined,
 				take: Number(limit),
 				skip: cursor ? 1 : 0,
 				where: { sessionId, remoteJid: jid },

@@ -15,7 +15,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/nizarfadlan/baileys-api.git"
+		"url": "https://github.com/aluxen/wpp-api"
 	},
 	"keywords": [
 		"chat",
@@ -34,15 +34,21 @@
 		"bot",
 		"baileys-api"
 	],
-	"author": {
-		"name": "Nizar Izzuddin Yatim Fadlan",
-		"email": "hello@nizarfadlan.dev"
-	},
+	"authors": [
+		{
+			"name": "Nizar Izzuddin Yatim Fadlan",
+			"email": "hello@nizarfadlan.dev"
+		},
+		{
+			"name": "Rafael Lauxen",
+			"email": "rafael.lauxen@hotmail.com"
+		}
+	],
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/nizarfadlan/baileys-api/issues"
+		"url": "https://github.com/aluxen/wpp-api/issues"
 	},
-	"homepage": "https://github.com/nizarfadlan/baileys-api#readme",
+	"homepage": "https://github.com/aluxen/wpp-api#readme",
 	"dependencies": {
 		"@hapi/boom": "^10.0.1",
 		"@prisma/client": "^4.16.2",
