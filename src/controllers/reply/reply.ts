@@ -1,9 +1,10 @@
 import { logger, emitEvent } from "@/utils";
 import WhatsappService from "@/whatsapp/service";
-import { updatePresence } from "./misc";
+import { updatePresence } from "../misc";
 import { WAPresence } from "@/types";
 import env from "@/config/env";
 import type { AnyMessageContent, MiscMessageGenerationOptions, proto } from "baileys";
+import { caipirinhaCalculator } from "./modules/caipirinha";
 
 
 const getChatType = (jid: string, type: "number" | "group" | "auto") => {
@@ -49,11 +50,18 @@ export const replyHandler = async (session: string, message: proto.IWebMessageIn
 		const senderJid = message.key.remoteJid?.replace("@s.whatsapp.net", "") || "Unknown";
 
 		// Always send the message to the manage usage chatID
-		await send(session, { text: `${senderName} (${senderJid})\n'${textReceived}'` }, env.CHAT_ID_USAGE_MANAGER_TEXT_ONLY, "auto", {});
-		await send(session, { text: JSON.stringify(message, null, 2) }, env.CHAT_ID_USAGE_MANAGER_COMPLETE, "auto", {});
+		send(session, { text: `${senderName} (${senderJid})\n'${textReceived}'` }, env.CHAT_ID_USAGE_MANAGER_TEXT_ONLY, "auto", {});
+		send(session, { text: JSON.stringify(message, null, 2) }, env.CHAT_ID_USAGE_MANAGER_COMPLETE, "auto", {});
 
 		// Use the textReceived to make a decision on what to do or what to reply
 		// Add your decision-making logic here
+
+		if (textReceived === "ping") send(session, { text: "pong" }, senderJid, "auto", {});
+
+		if (textReceived === "pong") send(session, { text: "ping" }, senderJid, "auto", {});
+
+		if (textReceived.trim().startsWith("caipirinha")) send(session, { text: caipirinhaCalculator(textReceived) }, senderJid, "auto", {});
+
 
 	} catch (e) {
 		const errorMessage = "An error occurred in replyHandler";

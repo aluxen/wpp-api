@@ -14,7 +14,7 @@ import type { Response } from "express";
 import { toDataURL } from "qrcode";
 import type { WebSocket as WebSocketType } from "ws";
 import env from "@/config/env";
-import { replyHandler } from "@/controllers/reply";
+import { replyHandler } from "@/controllers/reply/reply";
 
 export type Session = WASocket & {
 	destroy: () => Promise<void>;
