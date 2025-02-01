@@ -19,7 +19,8 @@ export type EventsType =
 	| "groups.upsert"
 	| "groups.update"
 	| "group-participants.update"
-	| "call.upsert";
+	| "call.upsert"
+	| "reply.handler.error";
 
 export class WebhookEvents {
 	qrcodeUpdated?: boolean;
