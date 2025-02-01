@@ -18,7 +18,8 @@ interface CustomProcessEnv {
 	SSE_MAX_QR_GENERATION?: number;
 	SESSION_CONFIG_ID?: string;
 	API_KEY?: string;
-	CHAT_ID_USAGE_MANAGER?: string;
+	CHAT_ID_USAGE_MANAGER_COMPLETE?: string;
+	CHAT_ID_USAGE_MANAGER_TEXT_ONLY?: string;
 }
 
 const envSchema = z
@@ -36,7 +37,8 @@ const envSchema = z
 		SSE_MAX_QR_GENERATION: z.number().default(5),
 		SESSION_CONFIG_ID: z.string().optional().default("session-config"),
 		API_KEY: z.string(),
-		CHAT_ID_USAGE_MANAGER: z.string().optional(),
+		CHAT_ID_USAGE_MANAGER_COMPLETE: z.string().optional(),
+		CHAT_ID_USAGE_MANAGER_TEXT_ONLY: z.string().optional(),
 	})
 	.superRefine((data, ctx) => {
 		if (data.ENABLE_WEBHOOK && !data.URL_WEBHOOK) {
@@ -68,7 +70,8 @@ const processEnv: Partial<CustomProcessEnv> = {
 		: undefined,
 	SESSION_CONFIG_ID: process.env.SESSION_CONFIG_ID,
 	API_KEY: process.env.API_KEY,
-	CHAT_ID_USAGE_MANAGER: process.env.CHAT_ID_USAGE_MANAGER,
+	CHAT_ID_USAGE_MANAGER_COMPLETE: process.env.CHAT_ID_USAGE_MANAGER_COMPLETE,
+	CHAT_ID_USAGE_MANAGER_TEXT_ONLY: process.env.CHAT_ID_USAGE_MANAGER_TEXT_ONLY,
 };
 
 type EnvInput = z.input<typeof envSchema>;

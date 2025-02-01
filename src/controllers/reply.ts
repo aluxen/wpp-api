@@ -5,11 +5,19 @@ import { WAPresence } from "@/types";
 import env from "@/config/env";
 import type { AnyMessageContent, MiscMessageGenerationOptions, proto } from "baileys";
 
-export const send = async (sessionId: string, message: AnyMessageContent, jid: string, type: "number" | "group", options: MiscMessageGenerationOptions) => {
+
+const getChatType = (jid: string, type: "number" | "group" | "auto") => {
+	if (type === "auto") return jid.includes("g.us") ? "group" : "number";
+	return type;
+};
+
+export const send = async (sessionId: string, message: AnyMessageContent, jid: string, type: "number" | "group" | "auto" = "number", options: MiscMessageGenerationOptions) => {
 	try {
 		const session = WhatsappService.getSession(sessionId)!;
 
-		const validJid = await WhatsappService.validJid(session, jid, type);
+		const jidType: "number" | "group" = getChatType(jid, type);
+
+		const validJid = await WhatsappService.validJid(session, jid, jidType);
 		if (!validJid) return "JID does not exists";
 
 		await updatePresence(session, WAPresence.Available, validJid);
@@ -41,9 +49,8 @@ export const replyHandler = async (session: string, message: proto.IWebMessageIn
 		const senderJid = message.key.remoteJid?.replace("@s.whatsapp.net", "") || "Unknown";
 
 		// Always send the message to the manage usage chatID
-		const textToSend: AnyMessageContent = { text: `${senderName} (${senderJid})\n'${textReceived}'` };
-		const type = env.CHAT_ID_USAGE_MANAGER.includes("g.us") ? "group" : "number";
-		await send(session, textToSend, env.CHAT_ID_USAGE_MANAGER, type, {});
+		await send(session, { text: `${senderName} (${senderJid})\n'${textReceived}'` }, env.CHAT_ID_USAGE_MANAGER_TEXT_ONLY, "auto", {});
+		await send(session, { text: JSON.stringify(message, null, 2) }, env.CHAT_ID_USAGE_MANAGER_COMPLETE, "auto", {});
 
 		// Use the textReceived to make a decision on what to do or what to reply
 		// Add your decision-making logic here
