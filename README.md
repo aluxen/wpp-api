@@ -1,14 +1,8 @@
-> 🚨 NOTICE: There is no time for maintance and so, this project will be archived and no longer receive updates. Thank you everyone who has been a part of this ❤️
-
----
-
 # Baileys API
 
 Baileys is a simple, fast and easy to use WhatsApp Web API written in TypeScript. It is designed to be simple to use and is optimized for usage in Node.js.
 
 An implementation of [@WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys) as a simple REST API with multiple device support
-
-Project continued from [@ookamiiixd/baileys-api](https://github.com/ookamiiixd/baileys-api/)
 
 ## Requirements
 
@@ -17,33 +11,20 @@ Project continued from [@ookamiiixd/baileys-api](https://github.com/ookamiiixd/b
 
 ## Installation
 
-1. Download [latest release](https://github.com/nizarfadlan/baileys-api/releases/latest). If you want to skip the build step, you can download the release (file with the `baileys-api.tgz` name pattern) from the release page
-2. Enter to the project directory
-3. Install the dependencies
+1. Enter to the project directory
+2. Install the dependencies
 
 ```sh
 npm install
 ```
 
-4. Build the project using the `build` script
-
-```sh
-npm run build
-```
-
-You can skip this part if you're using the prebuilt one from the release page
-
 ## Setup
 
 1. Copy the `.env.example` file and rename it into `.env`, then update your [connection url](https://www.prisma.io/docs/reference/database-reference/connection-urls) in the `DATABASE_URL` field
-2. Update your [provider](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields) in the `prisma/schema.prisma` file if you're using database other than MySQL
+2. Update your [provider](https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#fields) in the `prisma/schema.prisma` file if you're using database other than MongoDB
 3. Run your [migration](https://www.prisma.io/docs/reference/api-reference/command-reference#prisma-migrate)
 
-```sh
-npx prisma migrate (dev|deploy)
-```
-
-or push the schema
+push the schema
 
 ```sh
 npx prisma db push
@@ -73,7 +54,7 @@ ENABLE_WEBSOCKET="true"
 BOT_NAME="Whatsapp Bot"
 
 # Database Connection URL
-DATABASE_URL="mysql://root:@localhost:3306/baileys_api"
+DATABASE_URL="mongodb://user:pss@host:port/db"
 
 # Pino Logger Level
 LOG_LEVEL="debug"
@@ -117,7 +98,7 @@ The API Documentation can fork **Postman Collection** in your workspace Postman
 
 ## Notes
 
--   I only provide a simple authentication method, please modify according to your own needs.
+-   I (Nizar) only provide a simple authentication method, please modify according to your own needs.
 
 ## Notice
 

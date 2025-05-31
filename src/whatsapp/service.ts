@@ -1,4 +1,5 @@
 import makeWASocket, {
+	delay,
 	DisconnectReason,
 	isJidBroadcast,
 	makeCacheableSignalKeyStore,
@@ -6,13 +7,14 @@ import makeWASocket, {
 import type { ConnectionState, SocketConfig, WASocket, proto } from "baileys";
 import { Store, useSession } from "./store";
 import { prisma } from "@/config/database";
-import { logger, delay, emitEvent } from "@/utils";
+import { logger, emitEvent } from "@/utils";
 import { WAStatus } from "@/types";
 import type { Boom } from "@hapi/boom";
 import type { Response } from "express";
 import { toDataURL } from "qrcode";
 import type { WebSocket as WebSocketType } from "ws";
 import env from "@/config/env";
+import { replyHandler } from "@/controllers/reply/reply";
 
 export type Session = WASocket & {
 	destroy: () => Promise<void>;
@@ -245,6 +247,19 @@ class WhatsappService {
 			});
 		}
 
+		socket.ev.on("messages.upsert", async (event: { messages: proto.IWebMessageInfo[] }) => {
+			for (const message of event.messages) {
+				// If message was sent by the bot, ignore it
+				if (message.key.fromMe) continue;
+
+				try {
+					await replyHandler(sessionId, message);
+				} catch (error) {
+					logger.error(error, "Error handling incoming message");
+				}
+			}
+		});
+
 		await prisma.session.upsert({
 			create: {
 				id: configID,
@@ -258,7 +273,7 @@ class WhatsappService {
 
 	static getSessionStatus(session: Session) {
 		const state = ["CONNECTING", "CONNECTED", "DISCONNECTING", "DISCONNECTED"];
-		let status = state[(session.ws as WebSocketType).readyState];
+		let status = state[(session.ws as unknown as WebSocketType).readyState];
 		status = session.user ? "AUTHENTICATED" : status;
 		return session.waStatus !== WAStatus.Unknown ? session.waStatus : status.toLowerCase();
 	}

@@ -14,7 +14,7 @@ export const list: RequestHandler = async (req, res) => {
 		const { cursor = undefined, limit = 25 } = req.query;
 		const messages = (
 			await prisma.message.findMany({
-				cursor: cursor ? { pkId: Number(cursor) } : undefined,
+				cursor: cursor ? { pkId: String(cursor) } : undefined,
 				take: Number(limit),
 				skip: cursor ? 1 : 0,
 				where: { sessionId },
@@ -177,13 +177,13 @@ export const deleteMessageForMe: RequestHandler = async (req, res) => {
 		 * }
 		 * @returns {object} result
 		 */
-		const { jid, type = "number", message } = req.body;
+		const { jid, type = "number" } = req.body;
 		const session = WhatsappService.getSession(sessionId)!;
 
 		const exists = await WhatsappService.jidExists(session, jid, type);
 		if (!exists) return res.status(400).json({ error: "JID does not exists" });
 
-		const result = await session.chatModify({ clear: { messages: [message] } }, jid);
+		const result = await session.chatModify({ clear: true }, jid);
 
 		res.status(200).json(result);
 	} catch (e) {

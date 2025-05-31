@@ -9,7 +9,7 @@ export const list: RequestHandler = async (req, res) => {
 		const { sessionId } = req.params;
 		const { cursor = undefined, limit = 25, search } = req.query;
 		const groups = await prisma.contact.findMany({
-			cursor: cursor ? { pkId: Number(cursor) } : undefined,
+			cursor: cursor ? { pkId: String(cursor) } : undefined,
 			take: Number(limit),
 			skip: cursor ? 1 : 0,
 			where: {

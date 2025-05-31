@@ -64,7 +64,7 @@ export default function contactHandler(sessionId: string, event: BaileysEventEmi
 				}));
 			await model.createMany({
 				data: processedContacts,
-				skipDuplicates: true, // Prevent duplicate inserts
+				// skipDuplicates: true, // Prevent duplicate inserts
 			});
 			emitEvent("contacts.upsert", sessionId, { contacts: processedContacts });
 		} catch (error) {
